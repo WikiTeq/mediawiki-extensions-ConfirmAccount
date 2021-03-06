@@ -381,13 +381,19 @@ class ConfirmAccountsPage extends SpecialPage {
 			$form .= '</fieldset>';
 		}
 
-		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) ) {
+		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) || $this->hasItem( 'Company' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'confirmaccount-leg-person' )->escaped() . '</legend>';
 			if ( $this->hasItem( 'RealName' ) ) {
 				$form .= '<table style="padding:4px;">';
 				$form .= "<tr><td>" . $this->msg( 'confirmaccount-real' )->escaped() . "</td>";
 				$form .= "<td>" . htmlspecialchars( $accountReq->getRealName() ) . "</td></tr>\n";
+				$form .= '</table>';
+			}
+			if ( $this->hasItem( 'Company' ) ) {
+				$form .= '<table style="padding:4px;">';
+				$form .= "<tr><td>" . $this->msg( 'confirmaccount-company' )->escaped() . "</td>";
+				$form .= "<td>" . htmlspecialchars( $accountReq->getCompany() ) . "</td></tr>\n";
 				$form .= '</table>';
 			}
 			if ( $this->hasItem( 'Biography' ) ) {
@@ -426,6 +432,24 @@ class ConfirmAccountsPage extends SpecialPage {
 			if ( $this->hasItem( 'Links' ) ) {
 				$form .= "<p>" . $this->msg( 'confirmaccount-urls' )->escaped() . "</p>\n";
 				$form .= self::parseLinks( $accountReq->getUrls() );
+			}
+			$form .= '</fieldset>';
+		}
+
+		if ( $this->hasItem( 'ReceiveEmails' ) || $this->hasItem( 'ReceiveNewsletter' )  ) {
+			$form .= '<fieldset>';
+			$form .= '<legend>' . $this->msg( 'confirmaccount-leg-emails' )->escaped() . '</legend>';
+			if ( $this->hasItem( 'ReceiveEmails' ) ) {
+				$form .= '<table style="padding:4px;">';
+				$form .= "<tr><td>" . $this->msg( 'confirmaccount-receive-emails' )->escaped() . "</td>";
+				$form .= "<td>: " . ( $accountReq->getReceiveEmails() ? 'Yes' : 'No' ) . "</td></tr>\n";
+				$form .= '</table>';
+			}
+			if ( $this->hasItem( 'ReceiveNewsletter' ) ) {
+				$form .= '<table style="padding:4px;">';
+				$form .= "<tr><td>" . $this->msg( 'confirmaccount-receive-newsletter' )->escaped() . "</td>";
+				$form .= "<td>: " . ( $accountReq->getReceiveNewsletter() ? 'Yes' : 'No' ) . "</td></tr>\n";
+				$form .= '</table>';
 			}
 			$form .= '</fieldset>';
 		}
@@ -801,6 +825,14 @@ class ConfirmAccountsPage extends SpecialPage {
 			'confirmaccount-email-q'
 		)->escaped() . '</strong></td><td width=\'100%\'>' .
 			htmlspecialchars( $row->acr_email ) . $econf . '</td></tr>';
+
+		if ( $this->hasItem( 'Company' ) ) {
+			$r .= '<tr><td><strong>' . $this->msg(
+					'confirmaccount-company'
+				)->escaped() . '</strong></td><td width=\'100%\'>' .
+				  htmlspecialchars( $row->acr_company ) . '</td></tr>';
+		}
+
 		# Truncate this, blah blah...
 		$bio = htmlspecialchars( $row->acr_bio );
 		$preview = $this->getLanguage()->truncateForVisual( $bio, 400, '' );

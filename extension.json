@@ -59,6 +59,9 @@
 	"ResourceModules": {
 		"ext.confirmAccount": {
 			"styles": "includes/frontend/modules/confirmaccount.css"
+		},
+		"ext.requestAccount": {
+			"styles": "includes/frontend/modules/requestaccount.css"
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -138,6 +141,9 @@
 				"AreasOfInterest": {
 					"enabled": true
 				},
+				"Company": {
+					"enabled": true
+				},
 				"CV": {
 					"enabled": true
 				},
@@ -147,11 +153,27 @@
 				"Links": {
 					"enabled": true
 				},
+				"ReceiveEmails": {
+					"enabled": true
+				},
+				"ReceiveNewsletter": {
+					"enabled": true
+				},
 				"TermsOfService": {
 					"enabled": true
 				}
-			},
-			"merge_strategy": "array_plus_2d"
+			}
+		},
+		"ConfirmAccountRequestFormItemsRequired": {
+			"description": "Which form elements to be set as mandatory at Special:RequestAccount?",
+			"value": {
+				"RealName": false,
+				"Company": false,
+				"Notes": false,
+				"Links": false,
+				"ReceiveEmails": false,
+				"ReceiveNewsletter": false
+			}
 		},
 		"AccountRequestExts": {
 			"description": "If files can be attached, what types can be used? (MIME data is checked)",
@@ -219,6 +241,10 @@
 		"ConfirmAdminEmailExtraFields": {
 			"description": "Configuration for extra arguments that may be included in the admin email message. Extra parameters that could be added: [ 'email', 'real_name', 'bio', 'notes', 'urls', 'ip' ]. The order you specify here is the order in which you can use the parameters. $wgConfirmAdminEmailExtraFields is an array, the parameters 1 and 2 of the message will always be: 1 - the username and 2 - the confirm URL.",
 			"value": []
+		},
+		"ConfirmAccountApproveOnEmailConfirmation": {
+			"description": "If to automatically approve requests when email is confirmed",
+			"value": false
 		}
 	},
 	"manifest_version": 2

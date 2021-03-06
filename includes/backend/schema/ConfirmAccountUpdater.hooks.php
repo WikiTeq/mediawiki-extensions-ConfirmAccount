@@ -30,6 +30,16 @@ class ConfirmAccountUpdaterHooks {
 			$updater->dropExtensionIndex(
 				'account_requests', 'acr_deleted_reg', "$base/patch-drop-acr_deleted_reg-index.sql"
 			);
+
+			$updater->addExtensionField( 'account_requests', 'acr_company', "$base/patch-acr-company.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_company', "$base/patch-account_credentials-company.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_receive_emails', "$base/patch-acr-receive_emails.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_receive_emails', "$base/patch-account_credentials-receive_emails.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_receive_newsletter', "$base/patch-acr-receive_newsletter.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_receive_newsletter', "$base/patch-account_credentials-receive_newsletter.sql" );
+
 		} elseif ( $type === 'postgres' ) {
 			$base = "$base/postgres";
 
@@ -65,6 +75,24 @@ class ConfirmAccountUpdaterHooks {
 			);
 			$updater->addExtensionUpdate(
 				[ 'addPgField', 'account_requests', 'acr_agent', "$base/patch-acr_agent.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_requests', 'acr_company', "$base/patch-acr-company.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_credentials', 'acd_company', "$base/patch-account_credentials-company.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_requests', 'acr_receive_emails', "$base/patch-acr-receive_emails.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_credentials', 'acd_receive_emails', "$base/patch-account_credentials-receive_emails.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_requests', 'acr_receive_newsletter', "$base/patch-acr-receive_newsletter.sql", true ]
+			);
+			$updater->addExtensionUpdate(
+				[ 'addPgField', 'account_credentials', 'acd_receive_newsletter', "$base/patch-account_credentials-receive_newsletter.sql", true ]
 			);
 		}
 		return true;

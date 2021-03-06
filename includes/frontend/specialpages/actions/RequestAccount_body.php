@@ -1,10 +1,17 @@
 <?php
 
+use MediaWiki\Auth\TemporaryPasswordPrimaryAuthenticationProvider;
+use MediaWiki\Extensions\Mailchimp\Mailchimp;
+use MediaWiki\MediaWikiServices;
+
 class RequestAccountPage extends SpecialPage {
 	protected $mUsername; // string
 	protected $mRealName; // string
 	protected $mEmail; // string
 	protected $mBio; // string
+	protected $mCompany; // string
+	protected $mReceiveEmails; // string
+	protected $mReceiveNewsletter; // string
 	protected $mNotes; // string
 	protected $mUrls; // string
 	protected $mToS; // bool
@@ -32,6 +39,8 @@ class RequestAccountPage extends SpecialPage {
 		$reqUser = $this->getUser();
 		$request = $this->getRequest();
 
+		$this->getOutput()->addModules( 'ext.requestAccount' );
+
 		$block = ConfirmAccount::getAccountRequestBlock( $reqUser );
 		if ( $block ) {
 			throw new UserBlockedError( $block );
@@ -56,6 +65,10 @@ class RequestAccountPage extends SpecialPage {
 		# Other identifying fields...
 		$this->mEmail = trim( $request->getText( 'wpEmail' ) );
 		$this->mBio = $this->hasItem( 'Biography' ) ? $request->getText( 'wpBio', '' ) : '';
+		$this->mCompany = $this->hasItem( 'Company' ) ? $request->getText( 'wpCompany', '' ) : '';
+		$this->mReceiveEmails = $this->hasItem( 'ReceiveEmails' ) ? $request->getBool( 'wpReceiveEmails' ) : false;
+		$this->mReceiveNewsletter = $this->hasItem( 'ReceiveNewsletter' ) ? $request->getBool( 'wpReceiveNewsletter' ) : false;
+		$this->mCompany = $this->hasItem( 'Company' ) ? $request->getText( 'wpCompany', '' ) : '';
 		$this->mNotes = $this->hasItem( 'Notes' ) ? $request->getText( 'wpNotes', '' ) : '';
 		$this->mUrls = $this->hasItem( 'Links' ) ? $request->getText( 'wpUrls', '' ) : '';
 		# Site terms of service...
@@ -129,7 +142,7 @@ class RequestAccountPage extends SpecialPage {
 			$this->msg( 'requestaccount-email' )->text(), 'wpEmail'
 		) . "</td>";
 		$form .= "<td>" . Xml::input(
-			'wpEmail', 30, $this->mEmail, [ 'id' => 'wpEmail' ]
+			'wpEmail', 30, $this->mEmail, [ 'id' => 'wpEmail', 'required' => 'yes' ]
 		) . "</td></tr>\n";
 		if ( count( $wgAccountRequestTypes ) > 1 ) {
 			$form .= "<tr><td>" . $this->msg( 'requestaccount-reqtype' )->escaped() . "</td><td>";
@@ -181,7 +194,7 @@ class RequestAccountPage extends SpecialPage {
 			$form .= '</fieldset>';
 		}
 
-		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) ) {
+		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) || $this->hasItem( 'Company' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-person' )->escaped() . '</legend>';
 			if ( $this->hasItem( 'RealName' ) ) {
@@ -204,6 +217,16 @@ class RequestAccountPage extends SpecialPage {
 				style='width: 100%; background-color: #f9f9f9;'>" .
 					htmlspecialchars( $this->mBio ) . "</textarea></p>\n";
 			}
+			if ( $this->hasItem('Company' ) ) {
+				$form .= '<table style="padding:4px;">';
+				$form .= "<tr><td>" . Xml::label(
+						$this->msg( 'requestaccount-company' )->text(), 'wpCompany'
+					) . "</td>";
+				$form .= "<td>" . Xml::input(
+						'wpCompany', 35, $this->mCompany, [ 'id' => 'wpCompany' ]
+					) . "</td></tr>\n";
+				$form .= '</table>';
+			}
 			$form .= '</fieldset>';
 		}
 
@@ -218,20 +241,57 @@ class RequestAccountPage extends SpecialPage {
 			}
 			if ( $this->hasItem( 'Notes' ) ) {
 				$form .= "<p>" . $this->msg( 'requestaccount-notes' )->escaped() . "\n";
-				$form .= "<textarea tabindex='1' name='wpNotes' id='wpNotes' rows='3' cols='80'
-				style='width: 100%; background-color: #f9f9f9;'>" .
-					htmlspecialchars( $this->mNotes ) .
-					"</textarea></p>\n";
+				$form .= $this->createField(
+					'wpNotes',
+					'textarea',
+					htmlspecialchars( $this->mNotes ),
+					[
+						'tabindex' => '1',
+						'id' => 'wpNotes',
+						'rows' => '3',
+						'cols' => '80',
+						'style' => 'width: 100%; background-color: #f9f9f9;'
+					],
+					$this->isRequired( 'Notes' )
+				) . "</p>\n";
 			}
 			if ( $this->hasItem( 'Links' ) ) {
 				$form .= "<p>" . $this->msg( 'requestaccount-urls' )->escaped() . "\n";
-				$form .= "<textarea tabindex='1' name='wpUrls' id='wpUrls' rows='2' cols='80'
-				style='width: 100%; background-color: #f9f9f9;'>" .
-					htmlspecialchars( $this->mUrls ) .
-					"</textarea></p>\n";
+				$form .= $this->createField(
+					'wpUrls',
+					'textarea',
+					htmlspecialchars( $this->mUrls ),
+					[
+						'tabindex' => '1',
+						'id' => 'wpUrls',
+						'rows' => '2',
+						'cols' => '80',
+						'style' => 'width: 100%; background-color: #f9f9f9;'
+					],
+					$this->isRequired( 'Links' )
+				) . "</p>\n";
 			}
 			$form .= '</fieldset>';
 		}
+
+		if ( $this->hasItem( 'ReceiveEmails' ) || $this->hasItem( 'ReceiveEmails' ) ) {
+			$form .= '<fieldset>';
+			$form .= '<legend>' . $this->msg( 'requestaccount-leg-emails-options' )->escaped() . '</legend>';
+
+			if( $this->hasItem( 'ReceiveEmails') ) {
+				$form .= "<p>" . $this->createField( 'wpReceiveEmails', 'check', $this->mReceiveEmails, [], $this->isRequired( 'ReceiveEmails' ) ) .
+						 ' <label for="wpReceiveEmails">' . $this->msg( 'requestaccount-receive-emails' )->parse() .
+						 "</label></p>\n";
+			}
+
+			if ( $this->hasItem( 'ReceiveNewsletter' ) ) {
+				$form .= "<p>" . $this->createField( 'wpReceiveNewsletter', 'check', $this->mReceiveNewsletter, [], $this->isRequired( 'ReceiveNewsletter' ) ) .
+						 ' <label for="wpReceiveNewsletter">' . $this->msg( 'requestaccount-receive-newsletter' )->parse() . "</label></p>\n";
+			}
+
+			$form .= '</fieldset>';
+		}
+
 
 		if ( $this->hasItem( 'TermsOfService' ) ) {
 			$form .= '<fieldset>';
@@ -275,6 +335,25 @@ class RequestAccountPage extends SpecialPage {
 		global $wgConfirmAccountRequestFormItems;
 
 		return $wgConfirmAccountRequestFormItems[$name]['enabled'];
+	}
+
+	protected function isRequired( $name ) {
+		global $wgConfirmAccountRequestFormItemsRequired;
+
+		return $wgConfirmAccountRequestFormItemsRequired[$name];
+	}
+
+	protected function createField( $name, $type, $value, $attribs, $required = false ) {
+		if ( $required ) {
+			$attribs['required'] = 'yes';
+		}
+		if ( $type == 'textarea' ) {
+			return Xml::textarea( $name, $value, $attribs['cols'], $attribs['rows'], $attribs );
+		}
+		if ( $type == 'input' ) {
+			return Xml::input( $name, false, $value, $attribs );
+		}
+		return call_user_func( [ Xml::class, $type ], $name, $value, $attribs );
 	}
 
 	protected function doSubmit() {
@@ -323,6 +402,9 @@ class RequestAccountPage extends SpecialPage {
 				'tosAccepted'               => $this->mToS,
 				'email'                     => $this->mEmail,
 				'bio'                       => $this->mBio,
+				'company'                   => $this->mCompany,
+				'receiveEmails'             => $this->mReceiveEmails,
+				'receiveNewsletter'         => $this->mReceiveNewsletter,
 				'notes'                     => $this->mNotes,
 				'urls'                      => $this->mUrls,
 				'type'                      => $this->mType,
@@ -379,7 +461,7 @@ class RequestAccountPage extends SpecialPage {
 	 * @return void
 	 */
 	protected function confirmEmailToken( $code ) {
-		global $wgConfirmAccountContact, $wgPasswordSender;
+		global $wgConfirmAccountContact, $wgPasswordSender, $wgConfirmAccountApproveOnEmailConfirmation;
 
 		$reqUser = $this->getUser();
 		$out = $this->getOutput();
@@ -387,9 +469,9 @@ class RequestAccountPage extends SpecialPage {
 		list( $bodyArguments, $name,
 			$email_authenticated ) = ConfirmAccount::requestInfoFromEmailToken( $code );
 		if ( $name && $email_authenticated === null ) {
-			# Send confirmation email to prospective user
+			# Flag user as email confirmed in the account_requests table
 			ConfirmAccount::confirmEmail( $name );
-
+			# Send notification email to admins
 			$adminsNotify = ConfirmAccount::getAdminsToNotify();
 			$adminsNotify->rewind();
 			# Send an email to admin after email has been confirmed
@@ -416,8 +498,18 @@ class RequestAccountPage extends SpecialPage {
 					}
 				}
 			}
-			$out->addWikiMsg( 'requestaccount-econf' );
-			$out->returnToMain();
+
+			# Auto approve
+			if( $wgConfirmAccountApproveOnEmailConfirmation ) {
+				ConfirmAccount::autoApproveRequest( $name );
+				$this->getOutput()->addWikiMsg('confirmaccount-auto-created');
+				$this->getOutput()->addReturnTo(
+					Title::newFromText( 'UserLogin', NS_SPECIAL )
+				);
+			}else{
+				$out->addWikiMsg( 'requestaccount-econf' );
+				$out->returnToMain();
+			}
 		} else {
 			# Maybe the user confirmed after account was created...
 			$user = User::newFromConfirmationCode( $code, User::READ_LATEST );

@@ -12,6 +12,9 @@ class AccountRequestSubmission {
 	protected $tosAccepted;
 	protected $email;
 	protected $bio;
+	protected $company;
+	protected $receiveEmails;
+	protected $receiveNewsletter;
 	protected $notes;
 	protected $urls;
 	protected $type;
@@ -35,6 +38,9 @@ class AccountRequestSubmission {
 		$this->tosAccepted = $params['tosAccepted'];
 		$this->email = $params['email'];
 		$this->bio = trim( $params['bio'] );
+		$this->company = $params['company'];
+		$this->receiveEmails = $params['receiveEmails'];
+		$this->receiveNewsletter = trim( $params['receiveNewsletter'] );
 		$this->notes = trim( $params['notes'] );
 		$this->urls = trim( $params['urls'] );
 		$this->type = $params['type'];
@@ -70,7 +76,7 @@ class AccountRequestSubmission {
 	 * @return array [ true or error key string, html error msg or null ]
 	 */
 	public function submit( IContextSource $context ) {
-		global $wgAccountRequestThrottle, $wgConfirmAccountRequestFormItems;
+		global $wgAccountRequestThrottle, $wgConfirmAccountRequestFormItems, $wgConfirmAccountRequestFormItemsRequired;
 
 		ConfirmAccount::runAutoMaintenance();
 
@@ -115,6 +121,45 @@ class AccountRequestSubmission {
 				$context->msg( 'requestaccount-agree' )->escaped()
 			];
 		}
+
+		# Validate the rest of requires fields
+		foreach ( $wgConfirmAccountRequestFormItemsRequired as $requiredField => $isRequired ) {
+			if ( !$formConfig[ $requiredField ]['enabled'] ) {
+				continue;
+			}
+			// Weird way to map fields \(-_-(\
+			$fieldToCheck = null;
+			switch ( $requiredField ) {
+				case 'RealName':
+					$fieldToCheck = 'realName';
+					break;
+				case 'Company':
+					$fieldToCheck = 'company';
+					break;
+				case 'Notes':
+					$fieldToCheck = 'notes';
+					break;
+				case 'Links':
+					$fieldToCheck = 'urls';
+					break;
+				case 'ReceiveEmails':
+					$fieldToCheck = 'receiveEmails';
+					break;
+				case 'ReceiveNewsletter':
+					$fieldToCheck = 'receiveNewsletter';
+					break;
+			}
+			if ( $fieldToCheck === null ) {
+				continue;
+			}
+			if ( $isRequired && ( !$this->$fieldToCheck || empty( $this->$fieldToCheck ) ) ) {
+				return [
+					'acct_request_skipped_required_fields',
+					$context->msg( 'requestaccount-skipped-required-fields' )->escaped()
+				];
+			}
+		}
+
 		# Validate email address
 		if ( !Sanitizer::validateEmail( $this->email ) ) {
 			return [
@@ -236,6 +281,9 @@ class AccountRequestSubmission {
 			'real_name' 	=> $u->getRealName(),
 			'registration' 	=> $this->registration,
 			'bio' 			=> $this->bio,
+			'company' 		=> $this->company,
+			'receiveEmails' => $this->receiveEmails,
+			'receiveNewsletter' => $this->receiveNewsletter,
 			'notes' 		=> $this->notes,
 			'urls' 			=> $this->urls,
 			'filename' 		=> isset( $this->attachmentSrcName )

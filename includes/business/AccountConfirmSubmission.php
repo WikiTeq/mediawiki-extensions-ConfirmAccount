@@ -267,6 +267,9 @@ class AccountConfirmSubmission {
 					'acd_email_authenticated' =>
 						$dbw->timestampOrNull( $accReq->getEmailAuthTimestamp() ),
 					'acd_bio' => $accReq->getBio(),
+					'acd_company' => $accReq->getCompany(),
+					'acd_receive_emails' => $accReq->getReceiveEmails(),
+					'acd_receive_newsletter' => $accReq->getReceiveNewsletter(),
 					'acd_notes' => $accReq->getNotes(),
 					'acd_urls' => $accReq->getUrls(),
 					'acd_ip' => $accReq->getIP(),
@@ -299,6 +302,10 @@ class AccountConfirmSubmission {
 				$that->doPostCommitNewUserUpdates( $user, $context, $group, $accReq );
 			}
 		);
+
+		MediaWikiServices::getInstance()
+			->getHookContainer()
+			->run( 'ConfirmAccountCompleteRequest', [ $accReq ] );
 
 		return [ true, null, null ];
 	}

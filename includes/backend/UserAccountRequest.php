@@ -8,6 +8,9 @@ class UserAccountRequest {
 	protected $email;
 	protected $registration;
 	protected $bio;
+	protected $company;
+	protected $receiveEmails;
+	protected $receiveNewsletter;
 	protected $notes;
 	protected $urls;
 	protected $type;
@@ -44,6 +47,9 @@ class UserAccountRequest {
 		$req->email = $row->acr_email;
 		$req->registration = wfTimestampOrNull( TS_MW, $row->acr_registration );
 		$req->bio = $row->acr_bio;
+		$req->company = $row->acr_company;
+		$req->receiveEmails = $row->acr_receive_emails;
+		$req->receiveNewsletter = $row->acr_receive_newsletter;
 		$req->notes = $row->acr_notes;
 		$req->urls = $row->acr_urls;
 		$req->type = (int)$row->acr_type;
@@ -82,6 +88,9 @@ class UserAccountRequest {
 		$req->email = $fields['email'];
 		$req->registration = wfTimestampOrNull( TS_MW, $fields['registration'] );
 		$req->bio = $fields['bio'];
+		$req->company = $fields['company'];
+		$req->receiveEmails = $fields['receiveEmails'];
+		$req->receiveNewsletter = $fields['receiveNewsletter'];
 		$req->notes = $fields['notes'];
 		$req->urls = $fields['urls'];
 		$req->type = (int)$fields['type'];
@@ -192,6 +201,27 @@ class UserAccountRequest {
 	 */
 	public function getBio() {
 		return $this->bio;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCompany() {
+		return $this->company;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getReceiveEmails() {
+		return (bool)$this->receiveEmails;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getReceiveNewsletter() {
+		return (bool)$this->receiveNewsletter;
 	}
 
 	/**
@@ -338,6 +368,9 @@ class UserAccountRequest {
 				'acr_real_name' 	=> strval( $this->realName ),
 				'acr_registration' 	=> $dbw->timestamp( $this->registration ),
 				'acr_bio' 			=> strval( $this->bio ),
+				'acr_company' 		=> strval( $this->company ),
+				'acr_receive_emails' => (int)$this->receiveEmails,
+				'acr_receive_newsletter' => (int)$this->receiveNewsletter,
 				'acr_notes' 		=> strval( $this->notes ),
 				'acr_urls' 			=> strval( $this->urls ),
 				'acr_type' 			=> strval( $this->type ),

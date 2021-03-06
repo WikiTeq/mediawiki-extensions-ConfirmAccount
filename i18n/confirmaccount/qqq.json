@@ -48,6 +48,7 @@
 	"confirmaccount-leg-areas": "Used as fieldset label in the form.\n{{Identical|Main areas of interest}}",
 	"confirmaccount-leg-person": "Used as fieldset label in the form.\n{{Identical|Personal information}}",
 	"confirmaccount-leg-other": "Used as fieldset label in the form.\n{{Identical|Other information}}",
+	"confirmaccount-leg-emails": "Used as fieldset label in the form.\n{{Identical|Emails options}}",
 	"confirmaccount-leg-ip": "Used as fieldset label in the form.",
 	"confirmaccount-name": "Used as label for the username\n{{Identical|Username}}",
 	"confirmaccount-real": "Used as label for the realname.\n{{Identical|Name}}",
@@ -56,6 +57,9 @@
 	"confirmaccount-pos-0": "Used as Position (Account request type).\n\nSee also:\n* {{msg-mw|Confirmaccount-reqtype}}\n* {{msg-mw|Confirmaccount-pos-1}}\n{{Identical|Author}}",
 	"confirmaccount-pos-1": "Used as Position (Account request type).\n\nSee also:\n* {{msg-mw|Confirmaccount-reqtype}}\n* {{msg-mw|Confirmaccount-pos-0}}\n{{Identical|Editor}}",
 	"confirmaccount-bio": "Used as label for \"Biography\" textarea.\n{{Identical|Biography}}",
+	"confirmaccount-company": "Used as label for \"Company\" textarea.\n{{Identical|Company}}",
+	"confirmaccount-receive-emails": "{{Identical|Receive emails from this wiki}}",
+	"confirmaccount-receive-newsletter": "{{Identical|Receive newsletter from this wiki}}",
 	"confirmaccount-attach": "Used as label.\n\nThis message is followed by any one of the following:\n* the link which points to the file\n* {{msg-mw|Confirmaccount-none-p}}\n{{Identical|Resume/CV}}",
 	"confirmaccount-notes": "Used as label for the \"Notes\" textarea.\n{{Identical|Additional notes}}",
 	"confirmaccount-urls": "Used as label.\n\nThis message is followed by any one of the following:\n* a list of the links\n* {{msg-mw|Confirmaccount-none-p}}\n{{Identical|List of websites}}",
@@ -91,9 +95,11 @@
 	"confirmaccount-welc": "In ConfirmAccount extension. A welcome message that is automatically placed on the talk pages of new users.\n\nRefers to {{msg-mw|Helppage}}.\n\nThis message is followed by the Signature.\n\nThe edit summary for this welcome message is {{msg-mw|Confirmaccount-wsum}}.",
 	"confirmaccount-wsum": "In the ConfirmAccount extension. This is an edit summary used when a welcome message is automatically placed on the talk pages for new accounts.\n\nThe welcome message body is:\n* {{msg-mw|Confirmaccount-welc}}.\n{{Identical|Welcome}}",
 	"confirmaccount-email-subj": "Used as email subject.\n\nThe email body is any one of the following:\n* {{msg-mw|Confirmaccount-email-body}}\n* {{msg-mw|Confirmaccount-email-body2}}\n* {{msg-mw|Confirmaccount-email-body3}}\n* {{msg-mw|Confirmaccount-email-body4}}\n* {{msg-mw|Confirmaccount-email-body5}}\n{{Identical|SITENAME account request}}",
+	"confirmaccount-email-subj-autocreated": "TODO",
 	"confirmaccount-email-body": "Used as email body. Parameters:\n* $1 - username\n* $2 - initial password (random)\n* $3 - (Unused) reason\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}.\n{{Identical|Your request for an account ...}}",
 	"confirmaccount-email-body2": "Used as email body. Parameters:\n* $1 - username\n* $2 - initial password\n* $3 - reason\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}.\n{{Identical|Your request for an account ...}}",
 	"confirmaccount-email-body3": "This message is sent as an email to users when their account request has been denied by a bureaucrat.\n\nParameters:\n* $1 - the requested account name\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}.",
 	"confirmaccount-email-body4": "This message is sent as an email to users when their account request has been denied by a bureaucrat.\n\nParameters:\n* $1 - the requested account name\n* $2 - a comment written by the bureaucrat\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}.",
-	"confirmaccount-email-body5": "This message is sent as an email to users when their account request has been held by a bureaucrat.\n\nParameters:\n* $1 - the requested account name\n* $2 - the reason\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}."
+	"confirmaccount-email-body5": "This message is sent as an email to users when their account request has been held by a bureaucrat.\n\nParameters:\n* $1 - the requested account name\n* $2 - the reason\nThe email subject is {{msg-mw|Confirmaccount-email-subj}}.",
+	"confirmaccount-email-body-autocreated": "TODO"
 }

@@ -126,6 +126,27 @@ class ConfirmAccount {
 	}
 
 	/**
+	 * Send an email about the new account creation and the temporary password.
+	 *
+	 * @param User $user The new user account
+	 * @param User $creatingUser The user who created the account (can be anonymous)
+	 * @param string $password The temporary password
+	 *
+	 * @return \Status
+	 * @throws MWException
+	 */
+	public static function sendNewAccountEmail( User $user, $password ) {
+		$mainPageUrl = Title::newMainPage()->getCanonicalURL();
+		$userLanguage = $user->getOption( 'language' );
+		$subjectMessage = wfMessage( 'createaccount-title' )->inLanguage( $userLanguage );
+		$bodyMessage = wfMessage( 'createaccount-text', '', $user->getName(), $password,
+			'<' . $mainPageUrl . '>', 0 )
+			->inLanguage( $userLanguage );
+		$status = $user->sendMail( $subjectMessage->text(), $bodyMessage->text() );
+		return $status;
+	}
+
+	/**
 	 * Get request information from an email confirmation token
 	 *
 	 * @param string $code
@@ -374,4 +395,98 @@ class ConfirmAccount {
 		);
 		return new FileRepo( $info );
 	}
+
+	/**
+	 * Initiate user auto approval process
+	 *
+	 * @param $name
+	 *
+	 * @throws ErrorPageError
+	 */
+	public static function autoApproveRequest( $name ) {
+		// We did pass all the checks we need before, so now it's ok to
+		// just proceed with user creation directly
+		$request = UserAccountRequest::newFromName( $name, 'dbmaster' );
+		$user = User::newFromName( $request->getName() );
+		$user->setEmail( $request->getEmail() );
+		$user->setRealName( $request->getRealName() );
+		$user->addToDatabase();
+		$password = self::setRandomPasswordForUser( $user );
+		if ( $password === false ) {
+			throw new ErrorPageError( 'createacct-error', new RawMessage( 'createaccount-error-password' ) );
+		}
+		$user->saveSettings();
+		$confirmationParams = [
+			'userName' => $request->getName(),
+			'action' => 'complete',
+			'reason' => '',
+			'bio' => $request->getBio(),
+			'type' => $request->getType(),
+			'areas' => $request->getAreas(),
+			'allowComplete' => true
+		];
+		$submission = new AccountConfirmSubmission(
+			User::newFromId(1), // TODO: change this to not to set to admin by default
+			$request,
+			$confirmationParams
+		);
+		# Update the queue to reflect approval of this user
+		// @TODO: actually, we can't properly handle if the below will fail
+		// but we also can't call it earlier because it requires user to be already
+		// preset in the database
+		list( $status, $msg ) = $submission->submit( RequestContext::getMain() );
+		if ( $status !== true ) {
+			// ErrorPageError does not trigger rollback
+			$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
+			$lbFactory->rollbackMasterChanges( __METHOD__ );
+			throw new ErrorPageError( 'createacct-error', new RawMessage( $msg ) );
+		}
+		// CreateAccount stuff is completed, send user password via email
+		self::sendNewAccountEmail( $user, $password );
+	}
+
+	/**
+	 * Set the password on a user
+	 *
+	 * This just sets the password in the database directly.
+	 *
+	 * @param User $user
+	 *
+	 * @return false|string
+	 * @throws MWException
+	 * @throws PasswordError
+	 */
+	public static function setRandomPasswordForUser( User $user ) {
+		if ( !$user->getId() ) {
+			throw new MWException( "Passed User has not been added to the database yet!" );
+		}
+
+		$dbw = wfGetDB( DB_MASTER );
+		$row = $dbw->selectRow(
+			'user',
+			[ 'user_password' ],
+			[ 'user_id' => $user->getId() ],
+			__METHOD__
+		);
+
+		if ( !$row ) {
+			throw new MWException( "Passed User has an ID but is not in the database?" );
+		}
+
+		$passwordFactory = MediaWikiServices::getInstance()->getPasswordFactory();
+		$password = PasswordFactory::generateRandomPasswordString();
+		if ( !$passwordFactory->newFromCiphertext( $row->user_password )->verify( $password ) ) {
+			$passwordHash = $passwordFactory->newFromPlaintext( $password );
+			$dbw->update(
+				'user',
+				[ 'user_password' => $passwordHash->toString() ],
+				[ 'user_id' => $user->getId() ],
+				__METHOD__
+			);
+			return $password;
+		}
+
+		return false;
+	}
+
 }
