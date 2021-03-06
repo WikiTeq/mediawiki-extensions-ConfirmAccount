@@ -15,6 +15,7 @@
 		]
 	},
 	"confirmaccounts": "{{doc-special|ConfirmAccounts}}",
+	"confirmaccount-auto-created": "This message is displayed when account is confirmed via email and so being automatically created",
 	"confirmaccount-extensionname": "{{name}}",
 	"confirmaccount-desc": "{{desc|name=Confirm Account|url=https://www.mediawiki.org/wiki/Extension:ConfirmAccont}}",
 	"confirmaccount-maintext": "This message is followed by the message {{msg-mw|confirmaccount-types}}.",
