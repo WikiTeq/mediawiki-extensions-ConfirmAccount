@@ -222,9 +222,14 @@ class RequestAccountPage extends SpecialPage {
 				$form .= "<tr><td>" . Xml::label(
 						$this->msg( 'requestaccount-company' )->text(), 'wpCompany'
 					) . "</td>";
-				$form .= "<td>" . Xml::input(
-						'wpCompany', 35, $this->mCompany, [ 'id' => 'wpCompany' ]
-					) . "</td></tr>\n";
+				$form .= "<td>" .
+						 $this->createField(
+							 'wpCompany',
+							 'input',
+							 $this->mCompany,
+							 [ 'id' => 'wpCompany' ],
+							 $this->isRequired( 'Company' )
+						 ) . "</td></tr>\n";
 				$form .= '</table>';
 			}
 			$form .= '</fieldset>';
@@ -296,7 +301,7 @@ class RequestAccountPage extends SpecialPage {
 		if ( $this->hasItem( 'TermsOfService' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-tos' )->escaped() . '</legend>';
-			$form .= "<p>" . Xml::check( 'wpToS', $this->mToS, [ 'id' => 'wpToS' ] ) .
+			$form .= "<p>" . Xml::check( 'wpToS', $this->mToS, [ 'id' => 'wpToS', 'required' => 'yes' ] ) .
 				' <label for="wpToS">' . $this->msg( 'requestaccount-tos' )->parse() . "</label></p>\n";
 			$form .= '</fieldset>';
 		}
