@@ -130,20 +130,22 @@ class RequestAccountPage extends SpecialPage {
 		$form .= $this->msg( 'requestaccount-acc-text' )->parseAsBlock() . "\n";
 		$form .= '<table style="padding:4px;">';
 		if ( $this->hasItem( 'UserName' ) ) {
-			$form .= "<tr><td>" . Xml::label( $this->msg( 'username' )->text(), 'wpUsername' ) . "</td>";
-			$form .= "<td>" . Xml::input(
-				'wpUsername', 30, $this->mUsername, [ 'id' => 'wpUsername' ]
-			) . "</td></tr>\n";
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpUsername', 'username', $this->isRequired( 'Username' ) )
+					 . "</td>";
+			$form .= "<td>"
+					 . $this->createField( 'wpUsername', 'input', $this->mUsername, [], $this->isRequired( 'Username' ) )
+					 . "</td></tr>\n";
 		} else {
 			$form .= "<tr><td>" . $this->msg( 'username' )->escaped() . "</td>";
 			$form .= "<td>" . $this->msg( 'requestaccount-same' )->escaped() . "</td></tr>\n";
 		}
-		$form .= "<tr><td>" . Xml::label(
-			$this->msg( 'requestaccount-email' )->text(), 'wpEmail'
-		) . "</td>";
-		$form .= "<td>" . Xml::input(
-			'wpEmail', 30, $this->mEmail, [ 'id' => 'wpEmail', 'required' => 'yes' ]
-		) . "</td></tr>\n";
+		$form .= "<tr><td>"
+				 . $this->createLabel( 'wpEmail', 'requestaccount-email', $this->isRequired( 'Email' ) )
+				 . "</td>";
+		$form .= "<td>"
+				 . $this->createField( 'wpEmail', 'input', $this->mEmail, [], $this->isRequired( 'Email' ) )
+				 . "</td></tr>\n";
 		if ( count( $wgAccountRequestTypes ) > 1 ) {
 			$form .= "<tr><td>" . $this->msg( 'requestaccount-reqtype' )->escaped() . "</td><td>";
 			$options = [];
@@ -199,9 +201,9 @@ class RequestAccountPage extends SpecialPage {
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-person' )->escaped() . '</legend>';
 			if ( $this->hasItem( 'RealName' ) ) {
 				$form .= '<table style="padding:4px;">';
-				$form .= "<tr><td>" . Xml::label(
-					$this->msg( 'requestaccount-real' )->text(), 'wpRealName'
-				) . "</td>";
+				$form .= "<tr><td>"
+						 . $this->createLabel( 'wpRealName', 'requestaccount-real', $this->isRequired( 'RealName' ) )
+						 . "</td>";
 				$form .= "<td>" . Xml::input(
 					'wpRealName', 35, $this->mRealName, [ 'id' => 'wpRealName' ]
 				) . "</td></tr>\n";
@@ -219,9 +221,9 @@ class RequestAccountPage extends SpecialPage {
 			}
 			if ( $this->hasItem('Company' ) ) {
 				$form .= '<table style="padding:4px;">';
-				$form .= "<tr><td>" . Xml::label(
-						$this->msg( 'requestaccount-company' )->text(), 'wpCompany'
-					) . "</td>";
+				$form .= "<tr><td>"
+						 . $this->createLabel( 'wpCompany', 'requestaccount-company', $this->isRequired( 'Company' ) )
+						 . "</td>";
 				$form .= "<td>" .
 						 $this->createField(
 							 'wpCompany',
@@ -245,7 +247,9 @@ class RequestAccountPage extends SpecialPage {
 					[ 'id' => 'wpUploadFile', 'type' => 'file' ] ) . "</p>\n";
 			}
 			if ( $this->hasItem( 'Notes' ) ) {
-				$form .= "<p>" . $this->msg( 'requestaccount-notes' )->escaped() . "\n";
+				$form .= "<p>"
+						 . $this->createLabel( 'wpNotes', 'requestaccount-notes', $this->isRequired( 'Notes' ) )
+						 . "\n";
 				$form .= $this->createField(
 					'wpNotes',
 					'textarea',
@@ -261,7 +265,9 @@ class RequestAccountPage extends SpecialPage {
 				) . "</p>\n";
 			}
 			if ( $this->hasItem( 'Links' ) ) {
-				$form .= "<p>" . $this->msg( 'requestaccount-urls' )->escaped() . "\n";
+				$form .= "<p>"
+						 . $this->createLabel( 'wpUrls', 'requestaccount-urls', $this->isRequired( 'Links' ) )
+						 . "\n";
 				$form .= $this->createField(
 					'wpUrls',
 					'textarea',
@@ -284,14 +290,17 @@ class RequestAccountPage extends SpecialPage {
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-emails-options' )->escaped() . '</legend>';
 
 			if( $this->hasItem( 'ReceiveEmails') ) {
-				$form .= "<p>" . $this->createField( 'wpReceiveEmails', 'check', $this->mReceiveEmails, [], $this->isRequired( 'ReceiveEmails' ) ) .
-						 ' <label for="wpReceiveEmails">' . $this->msg( 'requestaccount-receive-emails' )->parse() .
-						 "</label></p>\n";
+				$form .= "<p>"
+						 . $this->createField( 'wpReceiveEmails', 'check', $this->mReceiveEmails, [], $this->isRequired( 'ReceiveEmails' ) )
+						 . $this->createLabel( 'wpReceiveEmails', 'requestaccount-receive-emails', $this->isRequired( 'ReceiveEmails' ) )
+						 . "</p>\n";
 			}
 
 			if ( $this->hasItem( 'ReceiveNewsletter' ) ) {
-				$form .= "<p>" . $this->createField( 'wpReceiveNewsletter', 'check', $this->mReceiveNewsletter, [], $this->isRequired( 'ReceiveNewsletter' ) ) .
-						 ' <label for="wpReceiveNewsletter">' . $this->msg( 'requestaccount-receive-newsletter' )->parse() . "</label></p>\n";
+				$form .= "<p>"
+						 . $this->createField( 'wpReceiveNewsletter', 'check', $this->mReceiveNewsletter, [], $this->isRequired( 'ReceiveNewsletter' ) )
+						 . $this->createLabel( 'wpReceiveNewsletter', 'requestaccount-receive-newsletter', $this->isRequired( 'ReceiveNewsletter' ) )
+						 . "</p>\n";
 			}
 
 			$form .= '</fieldset>';
@@ -301,8 +310,10 @@ class RequestAccountPage extends SpecialPage {
 		if ( $this->hasItem( 'TermsOfService' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-tos' )->escaped() . '</legend>';
-			$form .= "<p>" . Xml::check( 'wpToS', $this->mToS, [ 'id' => 'wpToS', 'required' => 'yes' ] ) .
-				' <label for="wpToS">' . $this->msg( 'requestaccount-tos' )->parse() . "</label></p>\n";
+			$form .= "<p>"
+					 . Xml::check( 'wpToS', $this->mToS, [ 'id' => 'wpToS', 'required' => 'yes' ] )
+					 . $this->createLabel( 'wpToS', 'requestaccount-tos', $this->isRequired( 'TermsOfService' ) )
+					 . "</p>\n";
 			$form .= '</fieldset>';
 		}
 
@@ -342,16 +353,37 @@ class RequestAccountPage extends SpecialPage {
 		return $wgConfirmAccountRequestFormItems[$name]['enabled'];
 	}
 
+	/**
+	 * Tests if the field is marked as required (UI only)
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
 	protected function isRequired( $name ) {
 		global $wgConfirmAccountRequestFormItemsRequired;
 
-		return $wgConfirmAccountRequestFormItemsRequired[$name];
+		// ToS is always required,
+		// RealName being used as a fallback to UserName if the first
+		// is omitted, so always set it as required
+		$defaultRequired = [
+			'TermsOfService' => true,
+			'Username' => true,
+			'Realname' => true,
+			'Email' => true
+		];
+
+		$testRequired = array_merge( $wgConfirmAccountRequestFormItemsRequired, $defaultRequired );
+
+		return isset($testRequired[$name])
+			? $testRequired[$name] : false;
 	}
 
 	protected function createField( $name, $type, $value, $attribs, $required = false ) {
 		if ( $required ) {
 			$attribs['required'] = 'yes';
 		}
+		$attribs['id'] = $name;
 		if ( $type == 'textarea' ) {
 			return Xml::textarea( $name, $value, $attribs['cols'], $attribs['rows'], $attribs );
 		}
@@ -359,6 +391,12 @@ class RequestAccountPage extends SpecialPage {
 			return Xml::input( $name, false, $value, $attribs );
 		}
 		return call_user_func( [ Xml::class, $type ], $name, $value, $attribs );
+	}
+
+	protected function createLabel( $id, $msg, $required = false ) {
+		return '<label for="' . $id . '" class="'
+			   . ( $required ? 'label-mandatory' : '' )
+			   . '">' . $this->msg( $msg )->parse() . '</label>';
 	}
 
 	protected function doSubmit() {

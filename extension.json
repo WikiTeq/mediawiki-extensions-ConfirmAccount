@@ -167,7 +167,6 @@
 		"ConfirmAccountRequestFormItemsRequired": {
 			"description": "Which form elements to be set as mandatory at Special:RequestAccount?",
 			"value": {
-				"RealName": false,
 				"Company": false,
 				"Notes": false,
 				"Links": false,
