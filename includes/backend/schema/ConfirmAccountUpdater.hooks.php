@@ -40,6 +40,27 @@ class ConfirmAccountUpdaterHooks {
 			$updater->addExtensionField( 'account_requests', 'acr_receive_newsletter', "$base/patch-acr-receive_newsletter.sql" );
 			$updater->addExtensionField( 'account_credentials', 'acd_receive_newsletter', "$base/patch-account_credentials-receive_newsletter.sql" );
 
+			$updater->addExtensionField( 'account_requests', 'acr_city', "$base/patch-acr-city.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_city', "$base/patch-account_credentials-city.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_country', "$base/patch-acr-country.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_country', "$base/patch-account_credentials-country.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_firstname', "$base/patch-acr-firstname.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_firstname', "$base/patch-account_credentials-firstname.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_lastname', "$base/patch-acr-lastname.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_lastname', "$base/patch-account_credentials-lastname.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_prefix', "$base/patch-acr-prefix.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_prefix', "$base/patch-account_credentials-prefix.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_state', "$base/patch-acr-state.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_state', "$base/patch-account_credentials-state.sql" );
+
+			$updater->addExtensionField( 'account_requests', 'acr_title', "$base/patch-acr-title.sql" );
+			$updater->addExtensionField( 'account_credentials', 'acd_title', "$base/patch-account_credentials-title.sql" );
+
 		} elseif ( $type === 'postgres' ) {
 			$base = "$base/postgres";
 

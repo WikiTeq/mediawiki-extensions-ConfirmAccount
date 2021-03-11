@@ -13,6 +13,15 @@ class AccountRequestSubmission {
 	protected $email;
 	protected $bio;
 	protected $company;
+
+	protected $prefix;
+	protected $title;
+	protected $city;
+	protected $country;
+	protected $state;
+	protected $firstname;
+	protected $lastname;
+
 	protected $receiveEmails;
 	protected $receiveNewsletter;
 	protected $notes;
@@ -39,6 +48,13 @@ class AccountRequestSubmission {
 		$this->email = $params['email'];
 		$this->bio = trim( $params['bio'] );
 		$this->company = $params['company'];
+		$this->prefix = $params['prefix'];
+		$this->city = $params['city'];
+		$this->state = $params['state'];
+		$this->country = $params['country'];
+		$this->firstname = $params['firstname'];
+		$this->lastname = $params['lastname'];
+		$this->title = $params['title'];
 		$this->receiveEmails = $params['receiveEmails'];
 		$this->receiveNewsletter = trim( $params['receiveNewsletter'] );
 		$this->notes = trim( $params['notes'] );
@@ -282,6 +298,13 @@ class AccountRequestSubmission {
 			'registration' 	=> $this->registration,
 			'bio' 			=> $this->bio,
 			'company' 		=> $this->company,
+			'country' 		=> $this->country,
+			'city' 			=> $this->city,
+			'state' 		=> $this->state,
+			'prefix' 		=> $this->prefix,
+			'title' 		=> $this->title,
+			'firstname' 	=> $this->firstname,
+			'lastname' 		=> $this->lastname,
 			'receiveEmails' => $this->receiveEmails,
 			'receiveNewsletter' => $this->receiveNewsletter,
 			'notes' 		=> $this->notes,

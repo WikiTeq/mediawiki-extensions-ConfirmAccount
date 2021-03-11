@@ -9,7 +9,14 @@ class RequestAccountPage extends SpecialPage {
 	protected $mRealName; // string
 	protected $mEmail; // string
 	protected $mBio; // string
+	protected $mPrefix; // string
+	protected $mFirstName; // string
+	protected $mLastName; // string
+	protected $mTitle; // string
 	protected $mCompany; // string
+	protected $mCity; // string
+	protected $mState; // string
+	protected $mCountry; // string
 	protected $mReceiveEmails; // string
 	protected $mReceiveNewsletter; // string
 	protected $mNotes; // string
@@ -66,6 +73,15 @@ class RequestAccountPage extends SpecialPage {
 		$this->mEmail = trim( $request->getText( 'wpEmail' ) );
 		$this->mBio = $this->hasItem( 'Biography' ) ? $request->getText( 'wpBio', '' ) : '';
 		$this->mCompany = $this->hasItem( 'Company' ) ? $request->getText( 'wpCompany', '' ) : '';
+
+		$this->mCountry = $this->hasItem( 'Country' ) ? $request->getText( 'wpCountry', '' ) : '';
+		$this->mCity = $this->hasItem( 'City' ) ? $request->getText( 'wpCity', '' ) : '';
+		$this->mState = $this->hasItem( 'State' ) ? $request->getText( 'wpState', '' ) : '';
+		$this->mPrefix = $this->hasItem( 'Prefix' ) ? $request->getText( 'wpPrefix', '' ) : '';
+		$this->mTitle = $this->hasItem( 'Title' ) ? $request->getText( 'wpTitle', '' ) : '';
+		$this->mFirstName = $this->hasItem( 'FirstName' ) ? $request->getText( 'wpFirstName', '' ) : '';
+		$this->mLastName = $this->hasItem( 'LastName' ) ? $request->getText( 'wpLastName', '' ) : '';
+
 		$this->mReceiveEmails = $this->hasItem( 'ReceiveEmails' ) ? $request->getBool( 'wpReceiveEmails' ) : false;
 		$this->mReceiveNewsletter = $this->hasItem( 'ReceiveNewsletter' ) ? $request->getBool( 'wpReceiveNewsletter' ) : false;
 		$this->mCompany = $this->hasItem( 'Company' ) ? $request->getText( 'wpCompany', '' ) : '';
@@ -160,6 +176,124 @@ class RequestAccountPage extends SpecialPage {
 			$form .= Xml::closeElement( 'select' ) . "\n";
 			$form .= '</td></tr>';
 		}
+
+		if ( $this->hasItem( 'Prefix' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpPrefix', 'requestaccount-prefix', $this->isRequired( 'Prefix' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpPrefix',
+						 'select',
+						 $this->mPrefix,
+						 [ 'id' => 'wpPrefix', 'options' => ConfirmAccount::getListOfPrefixes() ],
+						 $this->isRequired( 'Prefix' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'FirstName' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpFirstName', 'requestaccount-firstname', $this->isRequired( 'FirstName' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpFirstName',
+						 'input',
+						 $this->mFirstName,
+						 [ 'id' => 'wpFirstName' ],
+						 $this->isRequired( 'FirstName' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'LastName' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpLastName', 'requestaccount-lastname', $this->isRequired( 'LastName' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpLastName',
+						 'input',
+						 $this->mLastName,
+						 [ 'id' => 'wpLastName' ],
+						 $this->isRequired( 'LastName' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'Title' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpTitle', 'requestaccount-title', $this->isRequired( 'Title' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpTitle',
+						 'input',
+						 $this->mTitle,
+						 [ 'id' => 'wpTitle' ],
+						 $this->isRequired( 'Title' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'Company' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpCompany', 'requestaccount-company', $this->isRequired( 'Company' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpCompany',
+						 'input',
+						 $this->mCompany,
+						 [ 'id' => 'wpCompany' ],
+						 $this->isRequired( 'Company' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'City' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpCity', 'requestaccount-city', $this->isRequired( 'City' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpCity',
+						 'input',
+						 $this->mCity,
+						 [ 'id' => 'wpCity' ],
+						 $this->isRequired( 'City' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'State' ) ) {
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpState', 'requestaccount-state', $this->isRequired( 'State' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpState',
+						 'input',
+						 $this->mState,
+						 [ 'id' => 'wpState' ],
+						 $this->isRequired( 'State' )
+					 ) . "</td></tr>\n";
+		}
+
+		if ( $this->hasItem( 'Country' ) ) {
+			$countryList = [
+				'A',
+				'B',
+				'C'
+			];
+			$form .= "<tr><td>"
+					 . $this->createLabel( 'wpCountry', 'requestaccount-country', $this->isRequired( 'Country' ) )
+					 . "</td>";
+			$form .= "<td>" .
+					 $this->createField(
+						 'wpCountry',
+						 'select',
+						 $this->mCountry,
+						 [ 'id' => 'wpCountry', 'options' => ConfirmAccount::getListOfCountries() ],
+						 $this->isRequired( 'Country' )
+					 ) . "</td></tr>\n";
+		}
+
 		$form .= '</table></fieldset>';
 
 		$userAreas = ConfirmAccount::getUserAreaConfig();
@@ -196,7 +330,7 @@ class RequestAccountPage extends SpecialPage {
 			$form .= '</fieldset>';
 		}
 
-		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) || $this->hasItem( 'Company' ) ) {
+		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'requestaccount-leg-person' )->escaped() . '</legend>';
 			if ( $this->hasItem( 'RealName' ) ) {
@@ -218,21 +352,6 @@ class RequestAccountPage extends SpecialPage {
 				$form .= "<textarea tabindex='1' name='wpBio' id='wpBio' rows='12' cols='80'
 				style='width: 100%; background-color: #f9f9f9;'>" .
 					htmlspecialchars( $this->mBio ) . "</textarea></p>\n";
-			}
-			if ( $this->hasItem('Company' ) ) {
-				$form .= '<table style="padding:4px;">';
-				$form .= "<tr><td>"
-						 . $this->createLabel( 'wpCompany', 'requestaccount-company', $this->isRequired( 'Company' ) )
-						 . "</td>";
-				$form .= "<td>" .
-						 $this->createField(
-							 'wpCompany',
-							 'input',
-							 $this->mCompany,
-							 [ 'id' => 'wpCompany' ],
-							 $this->isRequired( 'Company' )
-						 ) . "</td></tr>\n";
-				$form .= '</table>';
 			}
 			$form .= '</fieldset>';
 		}
@@ -390,6 +509,26 @@ class RequestAccountPage extends SpecialPage {
 		if ( $type == 'input' ) {
 			return Xml::input( $name, false, $value, $attribs );
 		}
+		if ( $type == 'select' ) {
+			$options = '';
+			if( !$required ) {
+				$options .= Html::rawElement('option', [], '');
+			}
+			foreach ( $attribs['options'] as $key => $v ) {
+				$optAttribs = [ 'value' => $key ];
+				if( $key == $value ) {
+					$optAttribs['selected'] = 'selected';
+				}
+				$options .= Html::rawElement('option', $optAttribs, $v );
+			}
+			unset( $attribs['options'] );
+			$attribs['name'] = $name;
+			return Html::rawElement(
+				'select',
+				$attribs,
+				$options
+			);
+		}
 		return call_user_func( [ Xml::class, $type ], $name, $value, $attribs );
 	}
 
@@ -446,6 +585,13 @@ class RequestAccountPage extends SpecialPage {
 				'email'                     => $this->mEmail,
 				'bio'                       => $this->mBio,
 				'company'                   => $this->mCompany,
+				'country'                   => $this->mCountry,
+				'city'                   	=> $this->mCity,
+				'state'                   	=> $this->mState,
+				'prefix'                   	=> $this->mPrefix,
+				'title'                   	=> $this->mTitle,
+				'firstname'                 => $this->mFirstName,
+				'lastname'                  => $this->mLastName,
 				'receiveEmails'             => $this->mReceiveEmails,
 				'receiveNewsletter'         => $this->mReceiveNewsletter,
 				'notes'                     => $this->mNotes,

@@ -134,6 +134,18 @@
 				"RealName": {
 					"enabled": true
 				},
+				"Prefix": {
+					"enabled": false
+				},
+				"FirstName": {
+					"enabled": false
+				},
+				"LastName": {
+					"enabled": false
+				},
+				"Title": {
+					"enabled": false
+				},
 				"Biography": {
 					"enabled": true,
 					"minWords": 6
@@ -142,7 +154,16 @@
 					"enabled": true
 				},
 				"Company": {
-					"enabled": true
+					"enabled": false
+				},
+				"City": {
+					"enabled": false
+				},
+				"State": {
+					"enabled": false
+				},
+				"Country": {
+					"enabled": false
 				},
 				"CV": {
 					"enabled": true
@@ -167,7 +188,14 @@
 		"ConfirmAccountRequestFormItemsRequired": {
 			"description": "Which form elements to be set as mandatory at Special:RequestAccount?",
 			"value": {
+				"Prefix": false,
+				"FirstName": false,
+				"LastName": false,
+				"Title": false,
 				"Company": false,
+				"City": false,
+				"State": false,
+				"Country": false,
 				"Notes": false,
 				"Links": false,
 				"ReceiveEmails": false,

@@ -346,6 +346,63 @@ class ConfirmAccountsPage extends SpecialPage {
 			$form .= Xml::closeElement( 'select' ) . "\n";
 			$form .= "</td></tr>\n";
 		}
+
+		if ( $this->hasItem( 'Company' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-company' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getCompany() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'Country' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-country' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( ConfirmAccount::getListOfCountries()[ $accountReq->getCountry() ] ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'City' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-city' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getCity() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'State' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-state' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getState() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'Prefix' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-prefix' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( ConfirmAccount::getListOfPrefixes()[ $accountReq->getPrefix() ] ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'Title' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-title' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getTitle() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'FirstName' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-firstname' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getFirstName() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
+		if ( $this->hasItem( 'LastName' ) ) {
+			$form .= '<table style="padding:4px;">';
+			$form .= "<tr><td>" . $this->msg( 'confirmaccount-lastname' )->escaped() . "</td>";
+			$form .= "<td>" . htmlspecialchars( $accountReq->getLastName() ) . "</td></tr>\n";
+			$form .= '</table>';
+		}
+
 		$form .= '</table></fieldset>';
 
 		$userAreas = ConfirmAccount::getUserAreaConfig();
@@ -381,19 +438,13 @@ class ConfirmAccountsPage extends SpecialPage {
 			$form .= '</fieldset>';
 		}
 
-		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) || $this->hasItem( 'Company' ) ) {
+		if ( $this->hasItem( 'Biography' ) || $this->hasItem( 'RealName' ) ) {
 			$form .= '<fieldset>';
 			$form .= '<legend>' . $this->msg( 'confirmaccount-leg-person' )->escaped() . '</legend>';
 			if ( $this->hasItem( 'RealName' ) ) {
 				$form .= '<table style="padding:4px;">';
 				$form .= "<tr><td>" . $this->msg( 'confirmaccount-real' )->escaped() . "</td>";
 				$form .= "<td>" . htmlspecialchars( $accountReq->getRealName() ) . "</td></tr>\n";
-				$form .= '</table>';
-			}
-			if ( $this->hasItem( 'Company' ) ) {
-				$form .= '<table style="padding:4px;">';
-				$form .= "<tr><td>" . $this->msg( 'confirmaccount-company' )->escaped() . "</td>";
-				$form .= "<td>" . htmlspecialchars( $accountReq->getCompany() ) . "</td></tr>\n";
 				$form .= '</table>';
 			}
 			if ( $this->hasItem( 'Biography' ) ) {

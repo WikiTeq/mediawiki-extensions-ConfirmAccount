@@ -9,6 +9,15 @@ class UserAccountRequest {
 	protected $registration;
 	protected $bio;
 	protected $company;
+
+	protected $prefix;
+	protected $title;
+	protected $city;
+	protected $country;
+	protected $state;
+	protected $firstname;
+	protected $lastname;
+
 	protected $receiveEmails;
 	protected $receiveNewsletter;
 	protected $notes;
@@ -48,6 +57,13 @@ class UserAccountRequest {
 		$req->registration = wfTimestampOrNull( TS_MW, $row->acr_registration );
 		$req->bio = $row->acr_bio;
 		$req->company = $row->acr_company;
+		$req->prefix = $row->acr_prefix;
+		$req->country = $row->acr_country;
+		$req->city = $row->acr_city;
+		$req->state = $row->acr_state;
+		$req->title = $row->acr_title;
+		$req->firstname = $row->acr_firstname;
+		$req->lastname = $row->acr_lastname;
 		$req->receiveEmails = $row->acr_receive_emails;
 		$req->receiveNewsletter = $row->acr_receive_newsletter;
 		$req->notes = $row->acr_notes;
@@ -89,6 +105,13 @@ class UserAccountRequest {
 		$req->registration = wfTimestampOrNull( TS_MW, $fields['registration'] );
 		$req->bio = $fields['bio'];
 		$req->company = $fields['company'];
+		$req->city = $fields['city'];
+		$req->country = $fields['country'];
+		$req->state = $fields['state'];
+		$req->prefix = $fields['prefix'];
+		$req->title = $fields['title'];
+		$req->firstname = $fields['firstname'];
+		$req->lastname = $fields['lastname'];
 		$req->receiveEmails = $fields['receiveEmails'];
 		$req->receiveNewsletter = $fields['receiveNewsletter'];
 		$req->notes = $fields['notes'];
@@ -208,6 +231,55 @@ class UserAccountRequest {
 	 */
 	public function getCompany() {
 		return $this->company;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCountry() {
+		return $this->country;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCity() {
+		return $this->city;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getState() {
+		return $this->state;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPrefix() {
+		return $this->prefix;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFirstName() {
+		return $this->firstname;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLastName() {
+		return $this->lastname;
 	}
 
 	/**
@@ -369,6 +441,13 @@ class UserAccountRequest {
 				'acr_registration' 	=> $dbw->timestamp( $this->registration ),
 				'acr_bio' 			=> strval( $this->bio ),
 				'acr_company' 		=> strval( $this->company ),
+				'acr_country' 		=> strval( $this->country ),
+				'acr_city' 		=> strval( $this->city ),
+				'acr_state' 		=> strval( $this->state ),
+				'acr_prefix' 		=> strval( $this->prefix ),
+				'acr_title' 		=> strval( $this->title ),
+				'acr_firstname' 		=> strval( $this->firstname ),
+				'acr_lastname' 		=> strval( $this->lastname ),
 				'acr_receive_emails' => (int)$this->receiveEmails,
 				'acr_receive_newsletter' => (int)$this->receiveNewsletter,
 				'acr_notes' 		=> strval( $this->notes ),
