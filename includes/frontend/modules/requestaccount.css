@@ -2,3 +2,7 @@ form[name="accountrequest"] .label-mandatory:after {
 	content: " *";
 	color: red;
 }
+
+form[name="accountrequest"] input[type="checkbox"] + label {
+	display: inline;
+}
