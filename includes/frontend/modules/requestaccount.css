@@ -3,6 +3,14 @@ form[name="accountrequest"] .label-mandatory:after {
 	color: red;
 }
 
+form[name="accountrequest"] input[type="checkbox"] {
+	margin-right: 10px;
+}
+
 form[name="accountrequest"] input[type="checkbox"] + label {
 	display: inline;
+}
+
+form[name="accountrequest"] .g-recaptcha {
+	margin-bottom: 10px;
 }

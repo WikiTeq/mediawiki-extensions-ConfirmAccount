@@ -41,7 +41,7 @@ class RequestAccountPage extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgAccountRequestTypes;
+		global $wgAccountRequestTypes, $wgConfirmAccountDefaultCountry;
 
 		$reqUser = $this->getUser();
 		$request = $this->getRequest();
@@ -74,7 +74,7 @@ class RequestAccountPage extends SpecialPage {
 		$this->mBio = $this->hasItem( 'Biography' ) ? $request->getText( 'wpBio', '' ) : '';
 		$this->mCompany = $this->hasItem( 'Company' ) ? $request->getText( 'wpCompany', '' ) : '';
 
-		$this->mCountry = $this->hasItem( 'Country' ) ? $request->getText( 'wpCountry', '' ) : '';
+		$this->mCountry = $this->hasItem( 'Country' ) ? $request->getText( 'wpCountry', $wgConfirmAccountDefaultCountry ) : '';
 		$this->mCity = $this->hasItem( 'City' ) ? $request->getText( 'wpCity', '' ) : '';
 		$this->mState = $this->hasItem( 'State' ) ? $request->getText( 'wpState', '' ) : '';
 		$this->mPrefix = $this->hasItem( 'Prefix' ) ? $request->getText( 'wpPrefix', '' ) : '';
@@ -276,11 +276,6 @@ class RequestAccountPage extends SpecialPage {
 		}
 
 		if ( $this->hasItem( 'Country' ) ) {
-			$countryList = [
-				'A',
-				'B',
-				'C'
-			];
 			$form .= "<tr><td>"
 					 . $this->createLabel( 'wpCountry', 'requestaccount-country', $this->isRequired( 'Country' ) )
 					 . "</td>";
@@ -289,7 +284,10 @@ class RequestAccountPage extends SpecialPage {
 						 'wpCountry',
 						 'select',
 						 $this->mCountry,
-						 [ 'id' => 'wpCountry', 'options' => ConfirmAccount::getListOfCountries() ],
+						 [
+						 	'id' => 'wpCountry',
+							 'options' => ConfirmAccount::getListOfCountries()
+						 ],
 						 $this->isRequired( 'Country' )
 					 ) . "</td></tr>\n";
 		}

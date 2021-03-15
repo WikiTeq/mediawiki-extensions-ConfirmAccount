@@ -272,6 +272,10 @@
 		"ConfirmAccountApproveOnEmailConfirmation": {
 			"description": "If to automatically approve requests when email is confirmed",
 			"value": false
+		},
+		"ConfirmAccountDefaultCountry": {
+			"description": "Default value for a Country field",
+			"value": ""
 		}
 	},
 	"manifest_version": 2
