@@ -493,8 +493,7 @@ class ConfirmAccount {
 		return [
 			'DR' => 'Dr.',
 			'MR' => 'Mr.',
-			'MS' => 'Ms.',
-			'SR' => 'Sir.'
+			'MS' => 'Ms.'
 		];
 	}
 
