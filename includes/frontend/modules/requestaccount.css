@@ -14,3 +14,12 @@ form[name="accountrequest"] input[type="checkbox"] + label {
 form[name="accountrequest"] .g-recaptcha {
 	margin-bottom: 10px;
 }
+
+form[name="accountrequest"] input[type="checkbox"] + .label-mandatory:after {
+	content: "";
+}
+
+form[name="accountrequest"] input[type="checkbox"] + .label-mandatory:before {
+	content: "* ";
+	color: red;
+}
