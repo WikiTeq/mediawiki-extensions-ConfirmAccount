@@ -29,7 +29,7 @@ class ConfirmAccountHooks {
 
 	/**
 	 * @param SpecialPage $special
-	 * @param $subPage
+	 * @param string $subPage
 	 *
 	 * @return false
 	 * @throws MWException
