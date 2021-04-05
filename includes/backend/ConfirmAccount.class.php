@@ -443,6 +443,10 @@ class ConfirmAccount {
 		}
 		// CreateAccount stuff is completed, send user password via email
 		self::sendNewAccountEmail( $user, $password );
+		// Run the hook
+		MediaWikiServices::getInstance()
+			->getHookContainer()
+			->run( 'ConfirmAccountAutoApproveRequest', [ $request ] );
 	}
 
 	/**
